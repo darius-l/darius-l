@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Trash Pickup Schedule</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .container-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2rem;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .trash-box {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+      position: relative;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .trash-box.glow {
+      box-shadow: 0 0 20px 4px #10b981;
+    }
+
+    .trash-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .label {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    .countdown {
+      font-size: 1.5rem;
+      color: #4b5563;
+    }
+
+    .general   { border-top: 6px solid #374151; }
+    .packages  { border-top: 6px solid #2563eb; }
+    .glass     { border-top: 6px solid #10b981; }
+  </style>
+</head>
+<body>
+  <h1>Container Pickup Countdown</h1>
+  <div class="container-grid">
+    <div class="trash-box general" id="general">
+      <div class="trash-icon">🗑️</div>
+      <div class="label">General Trash</div>
+      <div class="countdown" id="general-countdown"></div>
+    </div>
+    <div class="trash-box packages" id="packages">
+      <div class="trash-icon">📦</div>
+      <div class="label">Packages</div>
+      <div class="countdown" id="packages-countdown"></div>
+    </div>
+    <div class="trash-box glass" id="glass">
+      <div class="trash-icon">🍾</div>
+      <div class="label">Glass</div>
+      <div class="countdown" id="glass-countdown"></div>
+    </div>
+  </div>
+
+  <script>
+    function getNextPickupDate(startDate, intervalWeeks) {
+      const today = new Date();
+      const intervalMs = intervalWeeks * 7 * 24 * 60 * 60 * 1000;
+      let next = new Date(startDate);
+
+      while (next < today) {
+        next = new Date(next.getTime() + intervalMs);
+      }
+
+      // Pickup always on Friday - ensure next date is a Friday
+      while (next.getDay() !== 5) {
+        next.setDate(next.getDate() + 1);
+      }
+
+      return next;
+    }
+
+    function daysUntil(date) {
+      const now = new Date('2025-05-30'); // or any date just before a pickup
+      const oneDay = 1000 * 60 * 60 * 24;
+      const diff = date.setHours(0,0,0,0) - now.setHours(0,0,0,0);
+      return Math.ceil(diff / oneDay);
+    }
+
+    function updateContainer(id, intervalWeeks, startDateStr) {
+      const startDate = new Date(startDateStr);
+      const nextDate = getNextPickupDate(startDate, intervalWeeks);
+      const daysLeft = daysUntil(new Date(nextDate));
+
+      const container = document.getElementById(id);
+      const text = document.getElementById(id + '-countdown');
+
+      if (daysLeft <= 0) {
+        text.textContent = `Today!`;
+        container.classList.add('glow');
+      } else {
+        text.textContent = `${daysLeft} day${daysLeft !== 1 ? 's' : ''} left`;
+        if (daysLeft <= 1) container.classList.add('glow');
+      }
+    }
+
+    // Call updates for each container (adjust start date as needed)
+    updateContainer("general", 2, "2025-05-19");  // Every 2 weeks from a Friday
+    updateContainer("packages", 3, "2024-01-12"); // Every 3 weeks from a Friday
+    updateContainer("glass", 12, "2024-01-19");   // Every 12 weeks from a Friday
+  </script>
+</body>
+</html>
