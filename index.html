@@ -39,7 +39,7 @@
     }
 
     .trash-box.glow {
-      box-shadow: 0 0 20px 4px #10b981;
+      box-shadow: 0 0 40px 8px #10b981;
     }
 
     .trash-icon {
@@ -58,27 +58,27 @@
       color: #4b5563;
     }
 
-    .general   { border-top: 6px solid #374151; }
+    .general   { border-top: 6px solid #10b981; }
     .packages  { border-top: 6px solid #2563eb; }
-    .glass     { border-top: 6px solid #10b981; }
+    .glass     { border-top: 6px solid #374151; }
   </style>
 </head>
 <body>
-  <h1>Container Pickup Countdown</h1>
+  <h1>Kada vežami konteineriai Žasmoje?</h1>
   <div class="container-grid">
     <div class="trash-box general" id="general">
       <div class="trash-icon">🗑️</div>
-      <div class="label">General Trash</div>
+      <div class="label">Buitinės</div>
       <div class="countdown" id="general-countdown"></div>
     </div>
     <div class="trash-box packages" id="packages">
       <div class="trash-icon">📦</div>
-      <div class="label">Packages</div>
+      <div class="label">Pakuotės</div>
       <div class="countdown" id="packages-countdown"></div>
     </div>
     <div class="trash-box glass" id="glass">
       <div class="trash-icon">🍾</div>
-      <div class="label">Glass</div>
+      <div class="label">Stiklo</div>
       <div class="countdown" id="glass-countdown"></div>
     </div>
   </div>
@@ -102,7 +102,7 @@
     }
 
     function daysUntil(date) {
-      const now = new Date('2025-05-30'); // or any date just before a pickup
+      const now = new Date(); // debug date: '2025-05-30' or any date just before a pickup
       const oneDay = 1000 * 60 * 60 * 24;
       const diff = date.setHours(0,0,0,0) - now.setHours(0,0,0,0);
       return Math.ceil(diff / oneDay);
@@ -117,18 +117,18 @@
       const text = document.getElementById(id + '-countdown');
 
       if (daysLeft <= 0) {
-        text.textContent = `Today!`;
+        text.textContent = `Šiandien!`;
         container.classList.add('glow');
       } else {
-        text.textContent = `${daysLeft} day${daysLeft !== 1 ? 's' : ''} left`;
+        text.textContent = `Po ${daysLeft} dien${daysLeft === 1 ? 'os' : 'ų'}`;
         if (daysLeft <= 1) container.classList.add('glow');
       }
     }
 
     // Call updates for each container (adjust start date as needed)
-    updateContainer("general", 2, "2025-05-19");  // Every 2 weeks from a Friday
-    updateContainer("packages", 3, "2024-01-12"); // Every 3 weeks from a Friday
-    updateContainer("glass", 12, "2024-01-19");   // Every 12 weeks from a Friday
+    updateContainer("general", 2, "2025-04-04");  // Every 2 weeks from a Friday
+    updateContainer("packages", 3, "2025-04-11"); // Every 3 weeks from a Friday
+    updateContainer("glass", 12, "2025-04-11");   // Every 12 weeks from a Friday
   </script>
 </body>
 </html>
